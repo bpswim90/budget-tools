@@ -1,0 +1,20 @@
+{
+  "budgetTemplateId": "<id for sheets template>",
+  "itemsToSkip": [
+    "<term to match in description of a row to skip"
+  ],
+  "categoryFromDesc": {
+    "<category name>": [
+      "<description terms from the csv files>",
+      "<that>",
+      "<should map to that category>"
+    ]
+  },
+  "categoryFromCsvCategory": {
+    "<category name>": [
+      "<category from the csv files>",
+      "<that>",
+      "<should map to that category>"
+    ]
+  }
+}
