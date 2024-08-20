@@ -2,6 +2,7 @@ import csv, os
 import json
 import pyinputplus as pyip
 import csvUtils 
+from constants import APPLE, ALLY
 
 with open('../budgetConfig.json', 'r') as f:
     config = json.load(f)
@@ -18,10 +19,10 @@ def importFilesToSheets():
             continue
         print('Reading from csv file: ' + filename + "...")
 
-        if filename.startswith('Apple'):
-            csvUtils.copyCsvToTempFile(filename, 'apple', outputWriter)
+        if filename.lower().startswith(APPLE):
+            csvUtils.copyCsvToTempFile(filename, APPLE, outputWriter)
         else:
-            csvUtils.copyCsvToTempFile(filename, 'ally', outputWriter)
+            csvUtils.copyCsvToTempFile(filename, ALLY, outputWriter)
 
     outputFile.close()
 

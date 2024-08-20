@@ -1,0 +1,2 @@
+APPLE = 'apple'
+ALLY = 'ally'

@@ -2,19 +2,20 @@ import csv
 import ezsheets
 import json
 from stringUtils import flipSignOfAmount
+from constants import APPLE, ALLY
 
 with open('../budgetConfig.json', 'r') as f:
     config = json.load(f)
 
 # Describes which index to look at in the individual csv transaction files
 CSV_TYPES = {
-    'apple': { 
+    APPLE: { 
         'dateIdx': 0,
         'descIdx': 2,
         'categoryIdx': 4,
         'amountIdx': 6
     },
-    'ally': {
+    ALLY: {
         'dateIdx': 0,
         'descIdx': 4,
         'categoryIdx': None,
@@ -92,7 +93,7 @@ def copyCsvToTempFile(filename, csvType, outputWriter):
         desc = row[descIdx]
 
         # Copy over $ amount of item
-        amount = row[amountIdx] if csvType == 'ally' else flipSignOfAmount(row[amountIdx])
+        amount = row[amountIdx] if csvType == ALLY else flipSignOfAmount(row[amountIdx])
 
         outputWriter.writerow([date, category, desc, amount])
 
