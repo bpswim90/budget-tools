@@ -1,4 +1,5 @@
 {
+  "baseInputPath": "../csv/",
   "budgetTemplateId": "<id for sheets template>",
   "itemsToSkip": [
     "<term to match in description of a row to skip"
