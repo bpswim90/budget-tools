@@ -1,12 +1,10 @@
-import csv, os
+import csv
 import ezsheets
 import json
-import pyinputplus as pyip
+from stringUtils import flipSignOfAmount
 
 with open('../budgetConfig.json', 'r') as f:
     config = json.load(f)
-
-baseInputPath = '../csv/'
 
 # Describes which index to look at in the individual csv transaction files
 CSV_TYPES = {
@@ -61,15 +59,9 @@ def getCategoryFromDesc(row, descIdx):
             return category
     return ''
 
-# Flips positive value to negative & vice versa, given a string amount
-def flipSignOfAmount(amount):
-    if amount.startswith('-'):
-        return amount[1:]
-    return '-' + amount
-    
 # Translate one of the input csv's into the temp csv
 def copyCsvToTempFile(filename, csvType, outputWriter):
-    filepath = baseInputPath + filename
+    filepath = config['baseInputPath'] + filename
     transactions = open(filepath)
     reader = csv.reader(transactions)
 
@@ -105,7 +97,7 @@ def copyCsvToTempFile(filename, csvType, outputWriter):
         outputWriter.writerow([date, category, desc, amount])
 
 # Uploads the temp csv to sheets
-def uploadCsvToSheets():
+def uploadCsvToSheets(newSheetName):
     tempCsv = open('temp.csv','r')
     reader = csv.reader(tempCsv)
 
@@ -134,35 +126,3 @@ def uploadCsvToSheets():
     budgetSheet.updateColumn(2, categoryCol)
     budgetSheet.updateColumn(3, descCol)
     budgetSheet.updateColumn(4, amountCol)
-
-# Main function that combines all operations to import & upload the csv files
-def importFilesToSheets():
-    outputFile = open('temp.csv', 'w', newline='')
-    outputWriter = csv.writer(outputFile)
-    outputWriter.writerow(['date','category','description','amount'])
-
-    # Write to temp combined CSV
-    for filename in os.listdir(baseInputPath):
-        if not filename.endswith('.csv'):
-            continue
-        print('Reading from csv file: ' + filename + "...")
-
-        if filename.startswith('Apple'):
-            copyCsvToTempFile(filename, 'apple', outputWriter)
-        else:
-            copyCsvToTempFile(filename, 'ally', outputWriter)
-
-    outputFile.close()
-
-    # Upload from temp csv to sheets
-    uploadCsvToSheets()
-
-    # Delete temp file
-    os.remove('temp.csv')
-
-newSheetName = pyip.inputStr(prompt='What would you like the new spreadsheet to be titled?\n')
-
-importFilesToSheets()
-
-
-
