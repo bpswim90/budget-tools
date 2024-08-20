@@ -26,8 +26,8 @@ Once the temp file has been created, it will attempt to upload the file to googl
 
 ## Stuff I might work on
 
-- [ ] Create new sheet from the template and import the CSVs t othat sheet
-- [ ] Add ability to specify name of the new sheet via command line
+- [x] Create new sheet from the template and import the CSVs to that sheet
+- [x] Add ability to specify name of the new sheet via command line
 - [ ] Maybe break out budget.py into a couple modules to improve readability
 - [ ] Look into adding tests - mock out the structure of the CSV files I use to use in tests
 - [ ] Could I turn this into a deployed API? Ability to update the configurations via a JSON API, configurations stored in a DB, etc...

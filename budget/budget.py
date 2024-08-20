@@ -1,6 +1,7 @@
 import csv, os
 import ezsheets
 import json
+import pyinputplus as pyip
 
 with open('../budgetConfig.json', 'r') as f:
     config = json.load(f)
@@ -59,6 +60,12 @@ def getCategoryFromDesc(row, descIdx):
         if descMatchesCategory(desc, category):
             return category
     return ''
+
+# Flips positive value to negative & vice versa, given a string amount
+def flipSignOfAmount(amount):
+    if amount.startswith('-'):
+        return amount[1:]
+    return '-' + amount
     
 # Translate one of the input csv's into the temp csv
 def copyCsvToTempFile(filename, csvType, outputWriter):
@@ -93,7 +100,7 @@ def copyCsvToTempFile(filename, csvType, outputWriter):
         desc = row[descIdx]
 
         # Copy over $ amount of item
-        amount = row[amountIdx]
+        amount = row[amountIdx] if csvType == 'ally' else flipSignOfAmount(row[amountIdx])
 
         outputWriter.writerow([date, category, desc, amount])
 
@@ -114,7 +121,14 @@ def uploadCsvToSheets():
         amountCol.append(row[3])
 
     templateSs = ezsheets.Spreadsheet(config['budgetTemplateId'])
-    budgetSheet = templateSs.sheets[0]
+    templateSheet = templateSs.sheets[0]
+
+    newSheet = ezsheets.createSpreadsheet(newSheetName)
+    templateSheet.copyTo(newSheet)
+    # Delete and replace the default sheet 1 of the new spreadsheet
+    del newSheet[0]
+    budgetSheet = newSheet[0]
+    budgetSheet.title = 'Sheet 1'
 
     budgetSheet.updateColumn(1, dateCol)
     budgetSheet.updateColumn(2, categoryCol)
@@ -145,6 +159,8 @@ def importFilesToSheets():
 
     # Delete temp file
     os.remove('temp.csv')
+
+newSheetName = pyip.inputStr(prompt='What would you like the new spreadsheet to be titled?\n')
 
 importFilesToSheets()
 
