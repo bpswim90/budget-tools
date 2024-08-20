@@ -12,7 +12,7 @@ This program seeks to automate a lot of that process by automatically importing 
 
 ## How does it work?
 
-The raw csv files go into the `/csv` folder in the root. (Currently I just have two CSVs that I need to import.) `budget.py` combines/translates the files into a temporary csv (the CSVs have different column order so need to be mapped).
+The raw csv files go into the `/csv` folder in the root. (Currently I just have two CSVs that I need to import.) The CSVs are combined/translated into a temporary csv (the CSVs have different column order so need to be mapped).
 
 During the process of translation, it will also skip over rows that are irrelevant to my budget, and also attempt to categorize the transactions based on the description or category found in the CSV. These mappings are configured in the `budgetConfig.json` file.
 
@@ -28,7 +28,7 @@ Once the temp file has been created, it will attempt to upload the file to googl
 
 - [x] Create new sheet from the template and import the CSVs to that sheet
 - [x] Add ability to specify name of the new sheet via command line
-- [ ] Maybe break out budget.py into a couple modules to improve readability
+- [x] Maybe break out budget.py into a couple modules to improve readability
 - [ ] Look into adding tests - mock out the structure of the CSV files I use to use in tests
 - [ ] Could I turn this into a deployed API? Ability to update the configurations via a JSON API, configurations stored in a DB, etc...
 - [ ] Then could there be a UI to interact with the API, that would enable you to upload the CSVs, change configurations, etc.
