@@ -1,11 +1,10 @@
 import csv
 import ezsheets
-import json
 from stringUtils import flipSignOfAmount
+from configUtils import loadConfig
 from constants import APPLE, ALLY
 
-with open('../budgetConfig.json', 'r') as f:
-    config = json.load(f)
+config = loadConfig()
 
 # Describes which index to look at in the individual csv transaction files
 CSV_TYPES = {

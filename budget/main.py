@@ -1,12 +1,12 @@
 import csv
 import os
-import json
 import pyinputplus as pyip
 import csvUtils
+from configUtils import loadConfig
 from constants import APPLE, ALLY
 
-with open('../budgetConfig.json', 'r') as f:
-    config = json.load(f)
+
+config = loadConfig()
 
 
 def importFilesToSheets():

@@ -162,7 +162,7 @@ cython_debug/
 #.idea/
 
 /csv/*
-/budget/credentials-sheets.json
-/budget/*.pickle
+credentials-sheets.json
+*.pickle
 budgetConfig.json
 .DS_Store
