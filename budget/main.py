@@ -9,11 +9,11 @@ from constants import APPLE, ALLY
 config = loadConfig()
 
 
-def importFilesToSheets():
+def import_files_to_sheets():
     """Combine all operations to import & upload the csv files"""
-    outputFile = open('temp.csv', 'w', newline='')
-    outputWriter = csv.writer(outputFile)
-    outputWriter.writerow(['date', 'category', 'description', 'amount'])
+    output_file = open('temp.csv', 'w', newline='')
+    output_writer = csv.writer(output_file)
+    output_writer.writerow(['date', 'category', 'description', 'amount'])
 
     # Write to temp combined CSV
     for filename in os.listdir(config['baseInputPath']):
@@ -22,20 +22,24 @@ def importFilesToSheets():
         print('Reading from csv file: ' + filename + "...")
 
         if filename.lower().startswith(APPLE):
-            csvUtils.copyCsvToTempFile(filename, APPLE, outputWriter)
+            csvUtils.copyCsvToTempFile(filename, APPLE, output_writer)
         else:
-            csvUtils.copyCsvToTempFile(filename, ALLY, outputWriter)
+            csvUtils.copyCsvToTempFile(filename, ALLY, output_writer)
 
-    outputFile.close()
+    output_file.close()
 
-    newSheetName = pyip.inputStr(
+    new_sheet_name = pyip.inputStr(
         prompt='What would you like the new spreadsheet to be titled?\n')
 
     # Upload from temp csv to sheets
-    csvUtils.uploadCsvToSheets(newSheetName)
+    csvUtils.uploadCsvToSheets(new_sheet_name)
 
     # Delete temp file
     os.remove('temp.csv')
 
 
-importFilesToSheets()
+try:
+    import_files_to_sheets()
+except KeyboardInterrupt:
+    os.remove('temp.csv')
+    raise
