@@ -1,17 +1,19 @@
-import csv, os
+import csv
+import os
 import json
 import pyinputplus as pyip
-import csvUtils 
+import csvUtils
 from constants import APPLE, ALLY
 
 with open('../budgetConfig.json', 'r') as f:
     config = json.load(f)
 
-# Main function that combines all operations to import & upload the csv files
+
 def importFilesToSheets():
+    """Combine all operations to import & upload the csv files"""
     outputFile = open('temp.csv', 'w', newline='')
     outputWriter = csv.writer(outputFile)
-    outputWriter.writerow(['date','category','description','amount'])
+    outputWriter.writerow(['date', 'category', 'description', 'amount'])
 
     # Write to temp combined CSV
     for filename in os.listdir(config['baseInputPath']):
@@ -26,7 +28,8 @@ def importFilesToSheets():
 
     outputFile.close()
 
-    newSheetName = pyip.inputStr(prompt='What would you like the new spreadsheet to be titled?\n')
+    newSheetName = pyip.inputStr(
+        prompt='What would you like the new spreadsheet to be titled?\n')
 
     # Upload from temp csv to sheets
     csvUtils.uploadCsvToSheets(newSheetName)
@@ -34,7 +37,5 @@ def importFilesToSheets():
     # Delete temp file
     os.remove('temp.csv')
 
+
 importFilesToSheets()
-
-
-

@@ -9,7 +9,7 @@ with open('../budgetConfig.json', 'r') as f:
 
 # Describes which index to look at in the individual csv transaction files
 CSV_TYPES = {
-    APPLE: { 
+    APPLE: {
         'dateIdx': 0,
         'descIdx': 2,
         'categoryIdx': 4,
@@ -23,21 +23,25 @@ CSV_TYPES = {
     }
 }
 
-# Skips a csv row from being imported
+
 def skipRow(row, descIdx):
+    """Skip a csv row from being imported"""
     itemsToSkip = tuple(config['itemsToSkip'])
     if row[descIdx].startswith(itemsToSkip):
         return True
     return False
 
-# Check whether a given csv category matches the desired category in sheets
-def categoryMatchesConfigCategory(csvCategory, budgetCategory):
-    configCategoryList = config['categoryFromCsvCategory'][budgetCategory]
-    result = any(csvCategory.lower() in configCategory.lower() for configCategory in configCategoryList)
-    return result 
 
-# Get sheets category that matches the csv category for a given row
+def categoryMatchesConfigCategory(csvCategory, budgetCategory):
+    """Check whether a given csv category matches the desired category in sheets"""
+    configCategoryList = config['categoryFromCsvCategory'][budgetCategory]
+    result = any(csvCategory.lower() in configCategory.lower()
+                 for configCategory in configCategoryList)
+    return result
+
+
 def getCategory(row, categoryIdx):
+    """Get sheets category that matches the csv category for a given row"""
     csvCategory = row[categoryIdx]
 
     for budgetCategory in config['categoryFromCsvCategory'].keys():
@@ -45,23 +49,26 @@ def getCategory(row, categoryIdx):
             return budgetCategory
     return ''
 
-# Check whether a given description from the csv matches a category in sheets
-def descMatchesCategory(desc, category): 
+
+def descMatchesCategory(desc, category):
+    """Check whether a given description from the csv matches a category in sheets"""
     matchList = config['categoryFromDesc'][category]
     result = any(word.lower() in desc.lower() for word in matchList)
     return result
 
-# Get category from the csv description for a csv row
+
 def getCategoryFromDesc(row, descIdx):
+    """Get category from the csv description for a csv row"""
     desc = row[descIdx]
-    
+
     for category in config['categoryFromDesc'].keys():
         if descMatchesCategory(desc, category):
             return category
     return ''
 
-# Translate one of the input csv's into the temp csv
+
 def copyCsvToTempFile(filename, csvType, outputWriter):
+    """Translate one of the input csv's into the temp csv"""
     filepath = config['baseInputPath'] + filename
     transactions = open(filepath)
     reader = csv.reader(transactions)
@@ -78,7 +85,6 @@ def copyCsvToTempFile(filename, csvType, outputWriter):
         elif skipRow(row, descIdx):
             continue
 
-
         # First try to get category from description,
         # then try to get it from csv category
         category = getCategoryFromDesc(row, descIdx)
@@ -93,13 +99,15 @@ def copyCsvToTempFile(filename, csvType, outputWriter):
         desc = row[descIdx]
 
         # Copy over $ amount of item
-        amount = row[amountIdx] if csvType == ALLY else flipSignOfAmount(row[amountIdx])
+        amount = row[amountIdx] if csvType == ALLY else flipSignOfAmount(
+            row[amountIdx])
 
         outputWriter.writerow([date, category, desc, amount])
 
-# Uploads the temp csv to sheets
+
 def uploadCsvToSheets(newSheetName):
-    tempCsv = open('temp.csv','r')
+    """Uploads the temp csv to sheets"""
+    tempCsv = open('temp.csv', 'r')
     reader = csv.reader(tempCsv)
 
     dateCol = []
