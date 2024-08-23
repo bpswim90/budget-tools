@@ -3,6 +3,7 @@ cachetools==5.5.0
 certifi==2024.7.4
 charset-normalizer==3.3.2
 dill==0.3.8
+exceptiongroup==1.2.2
 EZSheets==2024.8.9
 google-api-core==2.19.1
 google-api-python-client==2.142.0
@@ -12,11 +13,14 @@ google-auth-oauthlib==1.2.1
 googleapis-common-protos==1.63.2
 httplib2==0.22.0
 idna==3.8
+iniconfig==2.0.0
 isort==5.13.2
 mccabe==0.7.0
 oauthlib==3.2.2
+packaging==24.1
 pathlib==1.0.1
 platformdirs==4.2.2
+pluggy==1.5.0
 proto-plus==1.24.0
 protobuf==5.27.3
 pyasn1==0.6.0
@@ -25,6 +29,7 @@ PyInputPlus==0.2.12
 pylint==3.2.6
 pyparsing==3.1.2
 PySimpleValidate==0.2.12
+pytest==8.3.2
 requests==2.32.3
 requests-oauthlib==2.0.0
 rsa==4.9

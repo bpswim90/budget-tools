@@ -166,3 +166,4 @@ credentials-sheets.json
 *.pickle
 budgetConfig.json
 .DS_Store
+.vscode
