@@ -1,17 +1,17 @@
 import csv
 import os
 import pyinputplus as pyip
-import csvUtils
-from configUtils import loadConfig
+import csv_utils
+from config_utils import load_config
 from constants import APPLE, ALLY
 
 
-config = loadConfig()
+config = load_config()
 
 
 def import_files_to_sheets():
     """Combine all operations to import & upload the csv files"""
-    output_file = open('temp.csv', 'w', newline='')
+    output_file = open('temp.csv', 'w', newline='', encoding="utf-8")
     output_writer = csv.writer(output_file)
     output_writer.writerow(['date', 'category', 'description', 'amount'])
 
@@ -22,9 +22,9 @@ def import_files_to_sheets():
         print('Reading from csv file: ' + filename + "...")
 
         if filename.lower().startswith(APPLE):
-            csvUtils.copyCsvToTempFile(filename, APPLE, output_writer)
+            csv_utils.copy_csv_to_temp_file(filename, APPLE, output_writer)
         else:
-            csvUtils.copyCsvToTempFile(filename, ALLY, output_writer)
+            csv_utils.copy_csv_to_temp_file(filename, ALLY, output_writer)
 
     output_file.close()
 
@@ -32,7 +32,7 @@ def import_files_to_sheets():
         prompt='What would you like the new spreadsheet to be titled?\n')
 
     # Upload from temp csv to sheets
-    csvUtils.uploadCsvToSheets(new_sheet_name)
+    csv_utils.upload_csv_to_sheets(new_sheet_name)
 
     # Delete temp file
     os.remove('temp.csv')

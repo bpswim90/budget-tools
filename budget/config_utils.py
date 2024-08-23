@@ -2,10 +2,10 @@ import pathlib
 import json
 
 root_dir = pathlib.Path().parent.parent
-configPath = root_dir / 'budgetConfig.json'
+config_path = root_dir / 'budgetConfig.json'
 
 
-def loadConfig():
+def load_config():
     """Load in config json file"""
-    with open(configPath, 'r') as f:
+    with open(config_path, 'r', encoding="utf-8") as f:
         return json.load(f)
