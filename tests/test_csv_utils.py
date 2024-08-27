@@ -5,8 +5,8 @@ from budget.csv_utils import skip_row, category_matches_config_category
 data = [
     (['5/5/2024', 'Transaction', 'Grocery', '-100.00'], False),
     (['5/5/2024', 'Test', 'Grocery', '-100.00'], False),
-    (['5/5/2024', 'Requested transfer', '', '-100.00'], True),
-    (['5/5/2024', 'ACH DEPOSIT', '', '-100.00'], True)
+    (['5/5/2024', 'transfer', '', '-100.00'], True),
+    (['5/5/2024', 'deposit', '', '-100.00'], True)
 ]
 
 
