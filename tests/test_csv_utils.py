@@ -1,22 +1,29 @@
 import pytest
-from budget.csv_utils import skip_row
+from budget.csv_utils import skip_row, category_matches_config_category
 
 
-@pytest.fixture
-def csv_row():
-    return ['5/5/2024', 'Transaction', 'Grocery', '-100.00']
+data = [
+    (['5/5/2024', 'Transaction', 'Grocery', '-100.00'], False),
+    (['5/5/2024', 'Test', 'Grocery', '-100.00'], False),
+    (['5/5/2024', 'Requested transfer', '', '-100.00'], True),
+    (['5/5/2024', 'ACH DEPOSIT', '', '-100.00'], True)
+]
 
 
-@pytest.fixture
-def csv_row_skip():
-    return ['5/5/2024', 'Requested transfer', '', '-100.00']
-
-
-def test_skip_row_returns_false(csv_row):
+@pytest.mark.parametrize("csv_row,expected", data)
+def test_skip_row(csv_row, expected):
     result = skip_row(csv_row, 1)
-    assert result is False
+    assert result is expected
 
 
-def test_skip_row_returns_true(csv_row_skip):
-    result = skip_row(csv_row_skip, 1)
-    assert result is True
+categoryData = [
+    ("Grocery", "grocery", True),
+    ("Medical", "health", True),
+    ("Medical", "grocery", False),
+]
+
+
+@pytest.mark.parametrize("csv_category,budget_category,expected", categoryData)
+def test_category_matches_config_category(csv_category, budget_category, expected):
+    result = category_matches_config_category(csv_category, budget_category)
+    assert result is expected
