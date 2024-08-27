@@ -3,6 +3,11 @@ import budget.csv_utils
 
 test_config = {
     "itemsToSkip": ["transfer", "deposit"],
+    "categoryFromDesc": {
+        "health": ["walgreens", "cvs"],
+        "news": ["nytimes", "washington post", "post dispatch"],
+        "tech": ["apple.com/bill", "amazon prime"],
+    },
     "categoryFromCsvCategory": {
         "grocery": ["Grocery"],
         "health": ["Medical"]
