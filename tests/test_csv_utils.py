@@ -1,6 +1,6 @@
 import pytest
-from budget.csv_utils import (skip_row, category_matches_config_category,
-                              get_category, desc_matches_category)
+from budget.csv_utils import (skip_row, category_matches_config_category, get_category,
+                              desc_matches_category)
 
 
 skipRowData = [

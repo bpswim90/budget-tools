@@ -1,0 +1,90 @@
+openapi: 3.0.0
+info:
+  title: "Budget Config API"
+  description: "API for fetching and updating the budget tools configuration"
+  version: "1.0.0"
+
+servers:
+  - url: "/api"
+
+components:
+  schemas:
+    BudgetCategory:
+      type: "object"
+      required:
+        - title
+      properties:
+        title:
+          type: "string"
+  parameters:
+    categoryId:
+      name: "categoryId"
+      description: "Id of the category to get"
+      in: path
+      required: True
+      schema:
+        type: "string"
+
+paths:
+  /budgetCategory:
+    get:
+      operationId: "budget_category.get_all"
+      tags:
+        - "Budget Category"
+      summary: "Get all budget categories"
+      responses:
+        "200":
+          description: "Successfuly got budget categories"
+    post:
+      operationId: "budget_category.create"
+      tags:
+        - "Budget Category"
+      summary: "Create a budget category"
+      requestBody:
+        description: "Category to create"
+        required: True
+        x-body-name: "budgetCategory"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BudgetCategory"
+      responses:
+        "201":
+          description: "Successfully created budget category"
+  /budgetCategory/{categoryId}:
+    get:
+      operationId: "budget_category.get_one"
+      tags:
+        - "Budget Category"
+      summary: "Get one category"
+      parameters:
+        - $ref: "#/components/parameters/categoryId"
+      responses:
+        "200":
+          description: "Successfully got category"
+    put:
+      operationId: "budget_category.update"
+      tags:
+        - "Budget Category"
+      summary: "Update a category"
+      parameters:
+        - $ref: "#/components/parameters/categoryId"
+      responses:
+        "200":
+          description: "Successfully updated category"
+      requestBody:
+        x-body-name: "budgetCategory"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BudgetCategory"
+    delete:
+      tags:
+        - "Budget Category"
+      operationId: "budget_category.delete"
+      summary: "Delete a category"
+      parameters:
+        - $ref: "#/components/parameters/categoryId"
+      responses:
+        "204":
+          description: "Successfully deleted category"

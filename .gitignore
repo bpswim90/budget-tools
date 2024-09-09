@@ -167,3 +167,5 @@ credentials-sheets.json
 budgetConfig.json
 .DS_Store
 .vscode
+*.db
+*.db-journal
