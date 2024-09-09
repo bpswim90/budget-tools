@@ -1,40 +1,36 @@
-from datetime import datetime, timezone
 from flask import make_response, abort
+from models import BudgetCategory, budget_categories_schema, budget_category_schema
 
-
-BUDGET_CATEGORIES = {
-    "1": {"title": "art", "created": "2024-09-06 19:22:39", "updated": "2024-09-06 19:22:39"},
-    "2": {"title": "car maintenance", "created": "2024-09-06 19:25:05", "updated": "2024-09-06 19:25:05"},
-    "3": {"title": "coffee/pastries", "created": "2024-09-06 19:25:05", "updated": "2024-09-06 19:25:05"}
-}
+from config import db
 
 
 def get_all():
-    return list(BUDGET_CATEGORIES.values())
+    budget_categories = BudgetCategory.query.all()
+    return budget_categories_schema.dump(budget_categories)
 
 
 def create(budgetCategory):
     title = budgetCategory.get("title")
 
-    current_titles = []
-    for category in BUDGET_CATEGORIES:
-        current_titles.append(category.title)
+    existing_category = BudgetCategory.query.filter(
+        BudgetCategory.title == title).one_or_none()
 
-    if title and title not in current_titles:
-        new_id = len(current_titles) + 1
-        BUDGET_CATEGORIES[new_id] = {
-            "title": title,
-            "created": datetime.now(timezone.utc),
-            "updated": datetime.now(timezone.utc)
-        }
-        return BUDGET_CATEGORIES[new_id], 201
+    if existing_category is None:
+        new_category = budget_category_schema.load(
+            budgetCategory, session=db.session)
+        db.session.add(new_category)
+        db.session.commit()
+        return budget_category_schema.dump(new_category), 201
     else:
         abort(406, f"Category with title {title} already exists")
 
 
 def get_one(categoryId):
-    if categoryId in BUDGET_CATEGORIES:
-        return BUDGET_CATEGORIES[categoryId]
+    category = BudgetCategory.query.filter(
+        BudgetCategory.id == categoryId).one_or_none()
+
+    if category is not None:
+        return budget_category_schema.dump(category)
     else:
         abort(
             404, f"Category with id {categoryId} not found"
@@ -42,10 +38,16 @@ def get_one(categoryId):
 
 
 def update(categoryId, budgetCategory):
-    if categoryId in BUDGET_CATEGORIES:
-        BUDGET_CATEGORIES[categoryId]["title"] = budgetCategory.get("title")
-        BUDGET_CATEGORIES[categoryId]["updated"] = datetime.now(timezone.utc)
-        return BUDGET_CATEGORIES[categoryId]
+    existing_category = BudgetCategory.query.filter(
+        BudgetCategory.id == categoryId).one_or_none()
+
+    if existing_category:
+        update_category = budget_category_schema.load(
+            budgetCategory, session=db.session)
+        existing_category.title = update_category.title
+        db.session.merge(existing_category)
+        db.session.commit()
+        return budget_category_schema.dump(existing_category), 201
     else:
         abort(
             404,
@@ -54,8 +56,11 @@ def update(categoryId, budgetCategory):
 
 
 def delete(categoryId):
-    if categoryId in BUDGET_CATEGORIES:
-        del BUDGET_CATEGORIES[categoryId]
+    existing_category = BudgetCategory.query.filter(
+        BudgetCategory.id == categoryId).one_or_none()
+    if existing_category:
+        db.session.delete(existing_category)
+        db.session.commit()
         return make_response(
             f"Category with id {categoryId} successfully deleted", 200
         )

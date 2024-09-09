@@ -6,7 +6,12 @@
 </head>
 <body>
     <h1>
-        Hello, World!
+        Hello, categories!
     </h1>
+    <ul>
+        {% for category in categories %}
+        <li>{{ category.title }}</li>
+        {% endfor %}
+    </ul>
 </body>
 </html>

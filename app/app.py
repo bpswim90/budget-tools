@@ -1,13 +1,15 @@
 from flask import render_template
-import connexion
+import config
+from models import BudgetCategory
 
-app = connexion.App(__name__, specification_dir="./")
-app.add_api("swagger.yml")
+app = config.connex_app
+app.add_api(config.basedir / "swagger.yml")
 
 
 @app.route("/")
 def home():
-    return render_template("home.html")
+    categories = BudgetCategory.query.all()
+    return render_template("home.html", categories=categories)
 
 
 if __name__ == "__main__":
