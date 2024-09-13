@@ -17,16 +17,23 @@ components:
         title:
           type: "string"
   parameters:
-    categoryId:
-      name: "categoryId"
+    category_id:
+      name: "category_id"
       description: "Id of the category to get"
+      in: path
+      required: True
+      schema:
+        type: "string"
+    match_string_id:
+      name: "match_string_id"
+      description: "Id of the match string"
       in: path
       required: True
       schema:
         type: "string"
 
 paths:
-  /budgetCategory:
+  /budget_category:
     get:
       operationId: "budget_category.get_all"
       tags:
@@ -43,7 +50,7 @@ paths:
       requestBody:
         description: "Category to create"
         required: True
-        x-body-name: "budgetCategory"
+        x-body-name: "budget_category"
         content:
           application/json:
             schema:
@@ -51,14 +58,14 @@ paths:
       responses:
         "201":
           description: "Successfully created budget category"
-  /budgetCategory/{categoryId}:
+  /budget_category/{category_id}:
     get:
       operationId: "budget_category.get_one"
       tags:
         - "Budget Category"
       summary: "Get one category"
       parameters:
-        - $ref: "#/components/parameters/categoryId"
+        - $ref: "#/components/parameters/category_id"
       responses:
         "200":
           description: "Successfully got category"
@@ -68,12 +75,12 @@ paths:
         - "Budget Category"
       summary: "Update a category"
       parameters:
-        - $ref: "#/components/parameters/categoryId"
+        - $ref: "#/components/parameters/category_id"
       responses:
         "200":
           description: "Successfully updated category"
       requestBody:
-        x-body-name: "budgetCategory"
+        x-body-name: "budget_category"
         content:
           application/json:
             schema:
@@ -84,7 +91,70 @@ paths:
       operationId: "budget_category.delete"
       summary: "Delete a category"
       parameters:
-        - $ref: "#/components/parameters/categoryId"
+        - $ref: "#/components/parameters/category_id"
       responses:
         "204":
           description: "Successfully deleted category"
+  /match_strings:
+    post:
+      operationId: "match_string.create"
+      tags:
+        - Match Strings
+      summary: "Create a match string associated with a budget category"
+      requestBody:
+        description: "Match string to create"
+        required: True
+        x-body-name: "match_string"
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                category_id:
+                  type: "integer"
+                text:
+                  type: "string"
+      responses:
+        "201":
+          description: "Successfully created match string"
+
+  /match_strings/{match_string_id}:
+    get:
+      operationId: "match_string.get_one"
+      tags:
+        - Match Strings
+      summary: "Get one match string"
+      parameters:
+        - $ref: "#/components/parameters/match_string_id"
+      responses:
+        "200":
+          description: "Successfully get one match string"
+    put:
+      operationId: "match_string.update"
+      tags:
+        - Match Strings
+      summary: "Update a match string"
+      parameters:
+        - $ref: "#/components/parameters/match_string_id"
+      responses:
+        "200":
+          description: "Successfully updated match string"
+      requestBody:
+        x-body-name: "match_string"
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                text:
+                  type: "string"
+    delete:
+      operationId: "match_string.delete"
+      tags:
+        - Match Strings
+      summary: "Delete a match string"
+      parameters:
+        - $ref: "#/components/parameters/match_string_id"
+      responses:
+        "204":
+          description: "Successfully deleted match string"

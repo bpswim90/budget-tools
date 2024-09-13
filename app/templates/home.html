@@ -8,10 +8,15 @@
     <h1>
         Hello, categories!
     </h1>
+    {% for category in categories %}
+    <h2>{{ category.title }}</h2>
     <ul>
-        {% for category in categories %}
-        <li>{{ category.title }}</li>
+        {% for match_string in category.match_strings %}
+        <li>
+            {{ match_string.text }}
+        </li>
         {% endfor %}
     </ul>
+    {% endfor %}
 </body>
 </html>
