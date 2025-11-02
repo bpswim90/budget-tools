@@ -169,3 +169,10 @@ budgetConfig.json
 .vscode
 *.db
 *.db-journal
+
+# Code review notes and recommendations
+code-review-notes.md
+
+# Task tracking and development backlog
+/tasks/
+backlog.md

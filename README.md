@@ -30,5 +30,3 @@ Once the temp file has been created, it will attempt to upload the file to googl
 - [x] Add ability to specify name of the new sheet via command line
 - [x] Maybe break out budget.py into a couple modules to improve readability
 - [ ] Look into adding tests - mock out the structure of the CSV files I use to use in tests
-- [ ] Could I turn this into a deployed API? Ability to update the configurations via a JSON API, configurations stored in a DB, etc...
-- [ ] Then could there be a UI to interact with the API, that would enable you to upload the CSVs, change configurations, etc.
