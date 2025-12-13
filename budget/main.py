@@ -11,22 +11,20 @@ config = load_config()
 
 def import_files_to_sheets():
     """Combine all operations to import & upload the csv files"""
-    output_file = open('temp.csv', 'w', newline='', encoding="utf-8")
-    output_writer = csv.writer(output_file)
-    output_writer.writerow(['date', 'category', 'description', 'amount'])
+    with open('temp.csv', 'w', newline='', encoding="utf-8") as output_file:
+        output_writer = csv.writer(output_file)
+        output_writer.writerow(['date', 'category', 'description', 'amount'])
 
-    # Write to temp combined CSV
-    for filename in os.listdir(config['baseInputPath']):
-        if not filename.endswith('.csv'):
-            continue
-        print('Reading from csv file: ' + filename + "...")
+        # Write to temp combined CSV
+        for filename in os.listdir(config['baseInputPath']):
+            if not filename.endswith('.csv'):
+                continue
+            print('Reading from csv file: ' + filename + "...")
 
-        if filename.lower().startswith(APPLE):
-            csv_utils.copy_csv_to_temp_file(filename, APPLE, output_writer)
-        else:
-            csv_utils.copy_csv_to_temp_file(filename, ALLY, output_writer)
-
-    output_file.close()
+            if filename.lower().startswith(APPLE):
+                csv_utils.copy_csv_to_temp_file(filename, APPLE, output_writer)
+            else:
+                csv_utils.copy_csv_to_temp_file(filename, ALLY, output_writer)
 
     new_sheet_name = pyip.inputStr(
         prompt='What would you like the new spreadsheet to be titled?\n')
