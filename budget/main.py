@@ -1,12 +1,52 @@
 import csv
 import os
+import pickle
+import socket
+import ezsheets
 import pyinputplus as pyip
+from google.auth.transport.requests import Request
+from google_auth_oauthlib.flow import InstalledAppFlow
 from budget import csv_utils
 from budget.config_utils import load_config
 from budget.constants import APPLE, ALLY
 
+SCOPES = [
+    "https://www.googleapis.com/auth/spreadsheets",
+    "https://www.googleapis.com/auth/drive",
+]
+TOKEN_FILES = ["token-sheets.pickle", "token-drive.pickle"]
+
+
+def _ensure_google_tokens():
+    creds = None
+    for token_file in TOKEN_FILES:
+        if os.path.exists(token_file):
+            with open(token_file, "rb") as f:
+                creds = pickle.load(f)
+            break
+
+    needs_auth = not creds or not creds.valid
+    needs_save = needs_auth or not all(os.path.exists(f) for f in TOKEN_FILES)
+
+    if needs_auth:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            with socket.socket() as s:
+                s.bind(("", 0))
+                free_port = s.getsockname()[1]
+            flow = InstalledAppFlow.from_client_secrets_file("credentials-sheets.json", SCOPES)
+            creds = flow.run_local_server(port=free_port)
+
+    if needs_save:
+        for token_file in TOKEN_FILES:
+            with open(token_file, "wb") as f:
+                pickle.dump(creds, f)
+
 
 config = load_config()
+_ensure_google_tokens()
+ezsheets.init()
 
 
 def import_files_to_sheets():

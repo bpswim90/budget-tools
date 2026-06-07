@@ -26,7 +26,7 @@ CSV_TYPES = {
 def skip_row(row, desc_idx):
     """Skip a csv row from being imported"""
     items_to_skip = tuple(config['itemsToSkip'])
-    if row[desc_idx].startswith(items_to_skip):
+    if row[desc_idx].lower().startswith(items_to_skip):
         return True
     return False
 
