@@ -30,8 +30,11 @@ def _ensure_google_tokens():
 
     if needs_auth:
         if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
+            try:
+                creds.refresh(Request())
+            except Exception:
+                creds = None
+        if not creds or not creds.valid:
             with socket.socket() as s:
                 s.bind(("", 0))
                 free_port = s.getsockname()[1]
