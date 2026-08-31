@@ -48,8 +48,6 @@ def _ensure_google_tokens():
 
 config = load_config()
 
-
-
 def import_files_to_sheets():
     """Combine all operations to import & upload the csv files"""
     with open('temp.csv', 'w', newline='', encoding="utf-8") as output_file:
@@ -77,8 +75,11 @@ def import_files_to_sheets():
     os.remove('temp.csv')
 
 
-try:
-    import_files_to_sheets()
-except KeyboardInterrupt:
-    os.remove('temp.csv')
-    raise
+if __name__ == "__main__":
+    _ensure_google_tokens()
+    ezsheets.init()
+    try:
+        import_files_to_sheets()
+    except KeyboardInterrupt:
+        os.remove('temp.csv')
+        raise
