@@ -176,3 +176,9 @@ code-review-notes.md
 # Task tracking and development backlog
 /tasks/
 backlog.md
+
+# gemini-cli settings
+.gemini/
+
+# GitHub App credentials
+gha-creds-*.json

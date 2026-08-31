@@ -1,8 +1,8 @@
 import csv
 import ezsheets
-from string_utils import flip_sign_of_amount
-from config_utils import load_config
-from constants import APPLE, ALLY
+from budget.string_utils import flip_sign_of_amount
+from budget.config_utils import load_config
+from budget.constants import APPLE, ALLY
 
 config = load_config()
 
@@ -26,7 +26,7 @@ CSV_TYPES = {
 def skip_row(row, desc_idx):
     """Skip a csv row from being imported"""
     items_to_skip = tuple(config['itemsToSkip'])
-    if row[desc_idx].startswith(items_to_skip):
+    if row[desc_idx].lower().startswith(tuple(x.lower() for x in items_to_skip)):
         return True
     return False
 
@@ -69,56 +69,57 @@ def get_category_from_desc(row, desc_idx):
 def copy_csv_to_temp_file(filename, csv_type, output_writer):
     """Translate one of the input csv's into the temp csv"""
     filepath = config['baseInputPath'] + filename
-    transactions = open(filepath, encoding="utf-8")
-    reader = csv.reader(transactions)
+    with open(filepath, encoding="utf-8") as transactions:
+        reader = csv.reader(transactions)
 
-    date_idx = CSV_TYPES[csv_type]['dateIdx']
-    desc_idx = CSV_TYPES[csv_type]['descIdx']
-    category_idx = CSV_TYPES[csv_type]['categoryIdx']
-    amount_idx = CSV_TYPES[csv_type]['amountIdx']
+        date_idx = CSV_TYPES[csv_type]['dateIdx']
+        desc_idx = CSV_TYPES[csv_type]['descIdx']
+        category_idx = CSV_TYPES[csv_type]['categoryIdx']
+        amount_idx = CSV_TYPES[csv_type]['amountIdx']
 
-    for row in reader:
-        # Skip header row
-        if reader.line_num == 1:
-            continue
-        elif skip_row(row, desc_idx):
-            continue
+        for row in reader:
+            # Skip header row or empty lines
+            if reader.line_num == 1 or not row:
+                continue
+            if skip_row(row, desc_idx):
+                continue
 
-        # First try to get category from description,
-        # then try to get it from csv category
-        category = get_category_from_desc(row, desc_idx)
+            # First try to get category from description,
+            # then try to get it from csv category
+            category = get_category_from_desc(row, desc_idx)
 
-        if not category and category_idx is not None:
-            category = get_category(row, category_idx)
+            if not category and category_idx is not None:
+                category = get_category(row, category_idx)
 
-        # Copy over date value
-        date = row[date_idx]
+            # Copy over date value
+            date = row[date_idx]
 
-        # Copy over description
-        desc = row[desc_idx]
+            # Copy over description
+            desc = row[desc_idx]
 
-        # Copy over $ amount of item
-        amount = row[amount_idx] if csv_type == ALLY else flip_sign_of_amount(
-            row[amount_idx])
+            # Copy over $ amount of item
+            amount = row[amount_idx] if csv_type == ALLY else flip_sign_of_amount(
+                row[amount_idx])
 
-        output_writer.writerow([date, category, desc, amount])
+            output_writer.writerow([date, category, desc, amount])
 
 
 def upload_csv_to_sheets(new_sheet_name):
     """Uploads the temp csv to sheets"""
-    temp_csv = open('temp.csv', 'r', encoding="utf-8")
-    reader = csv.reader(temp_csv)
-
     date_col = []
     category_col = []
     desc_col = []
     amount_col = []
 
-    for row in reader:
-        date_col.append(row[0])
-        category_col.append(row[1])
-        desc_col.append(row[2])
-        amount_col.append(row[3])
+    with open('temp.csv', 'r', encoding="utf-8") as temp_csv:
+        reader = csv.reader(temp_csv)
+        for row in reader:
+            if not row:
+                continue
+            date_col.append(row[0])
+            category_col.append(row[1])
+            desc_col.append(row[2])
+            amount_col.append(row[3])
 
     template_ss = ezsheets.Spreadsheet(config['budgetTemplateId'])
     template_sheet = template_ss.sheets[0]

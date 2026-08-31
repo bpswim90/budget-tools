@@ -18,6 +18,16 @@ During the process of translation, it will also skip over rows that are irreleva
 
 Once the temp file has been created, it will attempt to upload the file to google sheets, and then will delete the temp CSV.
 
+## Running the Application
+
+To run the CSV import tool:
+
+```bash
+python -m budget.main
+```
+
+This command should be run from the root directory of the project (`/budget-tools/`). The tool will process all CSV files in the `csv/` directory and prompt you to name the new Google Sheet.
+
 ## Stuff I learned
 
 - Working with files in Python, and CSV files in particular
