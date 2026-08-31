@@ -82,6 +82,7 @@ def copy_csv_to_temp_file(filename, csv_type, output_writer):
             if reader.line_num == 1 or not row:
                 continue
             if skip_row(row, desc_idx):
+                continue
 
             # First try to get category from description,
             # then try to get it from csv category

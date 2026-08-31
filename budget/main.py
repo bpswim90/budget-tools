@@ -51,7 +51,6 @@ config = load_config()
 if __name__ == "__main__":
     _ensure_google_tokens()
     ezsheets.init()
-ezsheets.init()
 
 
 def import_files_to_sheets():
