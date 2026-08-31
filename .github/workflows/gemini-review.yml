@@ -51,7 +51,10 @@ jobs:
           ISSUE_BODY: '${{ github.event.pull_request.body || github.event.issue.body }}'
           PULL_REQUEST_NUMBER: '${{ github.event.pull_request.number || github.event.issue.number }}'
           REPOSITORY: '${{ github.repository }}'
-          ADDITIONAL_CONTEXT: '${{ inputs.additional_context }}'
+          ADDITIONAL_CONTEXT: |-
+            ${{ inputs.additional_context }}
+            Before adding review comments, call `pull_request_read` (methods `get_review_comments` and `get_reviews`) to see what has already been raised in previous reviews on this pull request. Do not repeat feedback on an issue that was already flagged in an earlier review unless the affected code has materially changed since then. Only comment on new issues in code changed since the most recent review.
+            ${{ github.event.action == 'synchronize' && 'This review is a follow-up triggered by a push to an already-reviewed pull request, not the initial review. If there are no new issues to report, do not create or submit a review at all. If you do submit one, use a short one-line body noting that the latest changes were reviewed, or a brief note of the new findings only - omit the standard Review Summary and General Feedback sections, since those are only for the initial review.' || '' }}
           GEMINI_API_KEY: '${{ secrets.GEMINI_API_KEY }}'
         with:
           gcp_location: '${{ vars.GOOGLE_CLOUD_LOCATION }}'
