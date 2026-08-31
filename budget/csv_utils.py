@@ -78,11 +78,10 @@ def copy_csv_to_temp_file(filename, csv_type, output_writer):
         amount_idx = CSV_TYPES[csv_type]['amountIdx']
 
         for row in reader:
-            # Skip header row
-            if reader.line_num == 1:
+            # Skip header row or empty lines
+            if reader.line_num == 1 or not row:
                 continue
             if skip_row(row, desc_idx):
-                continue
 
             # First try to get category from description,
             # then try to get it from csv category

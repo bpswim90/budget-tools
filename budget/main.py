@@ -46,9 +46,11 @@ def _ensure_google_tokens():
             with open(token_file, "wb") as f:
                 pickle.dump(creds, f)
 
-
 config = load_config()
-_ensure_google_tokens()
+
+if __name__ == "__main__":
+    _ensure_google_tokens()
+    ezsheets.init()
 ezsheets.init()
 
 
