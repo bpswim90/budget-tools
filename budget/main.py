@@ -42,9 +42,15 @@ def _ensure_google_tokens():
             creds = flow.run_local_server(port=free_port)
 
     if needs_save:
-        for token_file in TOKEN_FILES:
-            with open(token_file, "wb") as f:
-                pickle.dump(creds, f)
+if __name__ == "__main__":
+    _ensure_google_tokens()
+    ezsheets.init()
+    try:
+        import_files_to_sheets()
+    except KeyboardInterrupt:
+        if os.path.exists('temp.csv'):
+            os.remove('temp.csv')
+        raise
 
 config = load_config()
 

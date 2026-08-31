@@ -26,7 +26,7 @@ CSV_TYPES = {
 def skip_row(row, desc_idx):
     """Skip a csv row from being imported"""
     items_to_skip = tuple(config['itemsToSkip'])
-    if row[desc_idx].lower().startswith(items_to_skip):
+    if row[desc_idx].lower().startswith(tuple(x.lower() for x in items_to_skip)):
         return True
     return False
 
@@ -114,6 +114,8 @@ def upload_csv_to_sheets(new_sheet_name):
     with open('temp.csv', 'r', encoding="utf-8") as temp_csv:
         reader = csv.reader(temp_csv)
         for row in reader:
+            if not row:
+                continue
             date_col.append(row[0])
             category_col.append(row[1])
             desc_col.append(row[2])
